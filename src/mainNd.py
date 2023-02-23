@@ -6,32 +6,33 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #divide and conquer algorithm
-def divide_and_conquer(points):
-    if len(points) == 1:
-        return points
-    elif len(points) == 2:
-        return points
-    else:
-        mid = len(points) // 2
-        left = divide_and_conquer(points[:mid])
-        right = divide_and_conquer(points[mid:])
-        return merge(left, right)
+# def divide_and_conquer(points):
+#     if len(points) == 1:
+#         return points
+#     elif len(points) == 2:
+#         return points
+#     else:
+#         mid = len(points) // 2
+#         left = divide_and_conquer(points[:mid])
+#         right = divide_and_conquer(points[mid:])
+#         return merge(left, right)
 
-#merge two list
-def merge(left, right):
-    result = []
-    i = 0
-    j = 0
-    while i < len(left) and j < len(right):
-        if left[i][0] < right[j][0]:
-            result.append(left[i])
-            i += 1
-        else:
-            result.append(right[j])
-            j += 1
-    result += left[i:]
-    result += right[j:]
-    return result
+# #merge two list
+# def merge(left, right):
+#     result = []
+#     i = 0
+#     j = 0
+#     while i < len(left) and j < len(right):
+#         if left[i][0] < right[j][0]:
+#             result.append(left[i])
+#             i += 1
+#         else:
+#             result.append(right[j])
+#             j += 1
+#     print(i+j)
+#     result += left[i:]
+#     result += right[j:]
+#     return result
 
 #calculate the distance between two points
 def distance(p1, p2):
@@ -40,20 +41,74 @@ def distance(p1, p2):
         dis += (p1[i] - p2[i]) ** 2
     return math.sqrt(dis)
 
-#calculate the shortest distance between two points
+#calculate the shortest distance between two points based on divide and conquer algorithm
+# def shortest_distance(points):
+#     count = 1
+#     if len(points) == 1:
+#         return sys.maxsize, points[0], points[0], count
+#     elif len(points) == 2:
+#         return distance(points[0], points[1]), points[0], points[1], count
+#     else:
+#         mid = len(points) // 2
+#         left_min_distance, left_point1, left_point2, left_count = shortest_distance(points[:mid])
+#         right_min_distance, right_point1, right_point2, right_count = shortest_distance(points[mid:])
+#         count += left_count + right_count
+#         if left_min_distance < right_min_distance:
+#             min_distance = left_min_distance
+#             point1 = left_point1
+#             point2 = left_point2
+#         else:
+#             min_distance = right_min_distance
+#             point1 = right_point1
+#             point2 = right_point2
+#         mid_x = points[mid][0]
+#         mid_points = []
+#         for point in points:
+#             if abs(point[0] - mid_x) < min_distance:
+#                 mid_points.append(point)
+#         for i in range(len(mid_points)):
+#             for j in range(i+1, len(mid_points)):
+#                 dis = distance(mid_points[i], mid_points[j])
+#                 count += 1
+#                 if dis < min_distance:
+#                     min_distance = dis
+#                     point1 = mid_points[i]
+#                     point2 = mid_points[j]
+#         return min_distance, point1, point2, count
+
 def shortest_distance(points):
-    min_distance = distance(points[0], points[1])
-    count = 0
-    point1 = points[0]
-    point2 = points[1]
-    for i in range(len(points)):
-        for j in range(i + 1, len(points)):
-            if distance(points[i], points[j]) <= min_distance:
-                min_distance = distance(points[i], points[j])
-                point1 = points[i]
-                point2 = points[j]
-            count += 1
-    return min_distance, point1, point2, count
+    count = 1
+    if len(points) == 1:
+        return sys.maxsize, points[0], points[0], count
+    elif len(points) == 2:
+        return distance(points[0], points[1]), points[0], points[1], count
+    else:
+        mid = len(points) // 2
+        left_min_distance, left_point1, left_point2, left_count = shortest_distance(points[:mid])
+        right_min_distance, right_point1, right_point2, right_count = shortest_distance(points[mid:])
+        count += left_count + right_count
+        if left_min_distance < right_min_distance:
+            min_distance = left_min_distance
+            point1 = left_point1
+            point2 = left_point2
+        else:
+            min_distance = right_min_distance
+            point1 = right_point1
+            point2 = right_point2
+        mid_x = points[mid][0]
+        mid_points = []
+        for point in points:
+            if abs(point[0] - mid_x) < min_distance:
+                mid_points.append(point)
+        for i in range(len(mid_points)):
+            for j in range(i+1, len(mid_points)):
+                dis = distance(mid_points[i], mid_points[j])
+                count += 1
+                if dis < min_distance:
+                    min_distance = dis
+                    point1 = mid_points[i]
+                    point2 = mid_points[j]
+        return min_distance, point1, point2, count
 
 def main():
     rand = 100
@@ -70,7 +125,7 @@ def main():
         points.append(point)
     start = time.time()
     #sort the points by x
-    points = divide_and_conquer(points)
+    # points = divide_and_conquer(points)
     #calculate the shortest distance
     min_distance, point1, point2, count = shortest_distance(points)
     end = time.time()
