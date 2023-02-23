@@ -43,6 +43,7 @@ def distance(p1, p2):
 #calculate the shortest distance between two points
 def shortest_distance(points):
     min_distance = distance(points[0], points[1])
+    count = 0
     point1 = points[0]
     point2 = points[1]
     for i in range(len(points)):
@@ -51,9 +52,11 @@ def shortest_distance(points):
                 min_distance = distance(points[i], points[j])
                 point1 = points[i]
                 point2 = points[j]
-    return min_distance, point1, point2
+            count += 1
+    return min_distance, point1, point2, count
 
 def main():
+    rand = 100
     #input the number of points
     n = int(input('Please input the number of points: '))
     #input the dimension of points
@@ -63,18 +66,19 @@ def main():
     for i in range(n):
         point = []
         for j in range(d):
-            point.append(random.randint(0, 200))
+            point.append(random.randint(0, rand))
         points.append(point)
     start = time.time()
     #sort the points by x
     points = divide_and_conquer(points)
     #calculate the shortest distance
-    min_distance, point1, point2 = shortest_distance(points)
+    min_distance, point1, point2, count = shortest_distance(points)
     end = time.time()
     print('The shortest distance is: ', min_distance)
     print('The two points are: ', point1, point2)
     print('The time cost is: ', end - start)
-    print(points)
+    print('Euclidian count: ', count)
+
     #plot the points
     x = []
     y = []
@@ -90,6 +94,8 @@ def main():
             c.append(point[3])
         if len(point) >= 5:
             s.append(point[4])
+        if len(point) >= 6:
+            o.append(point[5]*(1/rand))
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -100,14 +106,17 @@ def main():
         y.remove(point2[1])
         z.remove(point1[2])
         z.remove(point2[2])
-        ax.scatter(x, y, z, c='black')
+        ax.scatter(x, y, z, c='black', alpha=1)
         ax.scatter(point1[0], point1[1], point1[2], c='blue')
         ax.scatter(point2[0], point2[1], point2[2], c='blue')
     if len(point) == 4:
-        img = ax.scatter(x, y, z, c=c, cmap=plt.hot())
+        img = ax.scatter(x, y, z, c=c, cmap=plt.hot(), alpha=1)
         fig.colorbar(img)
     if len(point) == 5:
-        img = ax.scatter(x, y, z, c=c, cmap=plt.hot(), s=s)
+        img = ax.scatter(x, y, z, c=c, cmap=plt.hot(), s=s, alpha=1)
+        fig.colorbar(img)
+    if len(point) == 6:
+        img = ax.scatter(x, y, z, c=c, cmap=plt.hot(), s=s, alpha=o)
         fig.colorbar(img)
 
     x_line = [point1[0], point2[0]]
