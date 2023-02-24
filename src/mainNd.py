@@ -16,12 +16,13 @@ def distance(p1, p2):
     return math.sqrt(dis)
 
 def shortest_distance(points):
+    
     #even number of points base
     if len(points) == 2:
         return distance(points[0], points[1]), points[0], points[1]
     #odd number of points base
     elif len(points) == 3:
-        min_distance = distance(points[0], points[1])
+        min_distance = rand
         point1 = points[0]
         point2 = points[1]
         for i in range(len(points)):
@@ -32,7 +33,6 @@ def shortest_distance(points):
                     point1 = points[i]
                     point2 = points[j]
         return min_distance, point1, point2
-        
     else:
         mid = len(points) // 2
         left_min_distance, left_point1, left_point2 = shortest_distance(points[:mid])
@@ -62,7 +62,7 @@ def shortest_distance(points):
 
 def main():
     global count
-    rand = 1000
+    global rand
     n = int(input('Please input the number of points: '))
     d = int(input('Please input the dimension of points: '))
     #generate random points
@@ -73,6 +73,7 @@ def main():
             point.append(random.randint(0, rand))
         points.append(point)
     start = time.time()
+    points = sorted(points, key=lambda point: point[0])
     #calculate the shortest distance
     min_distance, point1, point2= shortest_distance(points)
     end = time.time()
@@ -89,7 +90,8 @@ def main():
     s = []
     o = [] 
     for point in points:
-        x.append(point[0])
+        if len(point) >= 1:
+            x.append(point[0])
         if len(point) >= 2:
             y.append(point[1])
         if len(point) >= 3:
@@ -102,14 +104,23 @@ def main():
             o.append(point[5]*(1/rand))
 
     fig = plt.figure()
-    if len(point) == 2:
-        plt.scatter(x, y, c='black', alpha=1)
-        plt.scatter(point1[0], point1[1], c='blue')
-        plt.scatter(point2[0], point2[1], c='blue')
-        x_line = [point1[0], point2[0]]
-        y_line = [point1[1], point2[1]]
-        plt.plot(x_line, y_line)
-    if len(point) == 3:
+    if len(point) <= 2:
+        if len(point) == 1:
+            y = [0] * len(x)
+            plt.scatter(x, y, c='black', alpha=1)
+            plt.scatter(point1[0], 0, c='blue')
+            plt.scatter(point2[0], 0, c='blue')
+            x_line = [point1[0], point2[0]]
+            y_line = [0, 0]
+            plt.plot(x_line, y_line)
+        if len(point) == 2:
+            plt.scatter(x, y, c='black', alpha=1)
+            plt.scatter(point1[0], point1[1], c='blue')
+            plt.scatter(point2[0], point2[1], c='blue')
+            x_line = [point1[0], point2[0]]
+            y_line = [point1[1], point2[1]]
+            plt.plot(x_line, y_line)
+    elif len(point) <= 6:
         ax = fig.add_subplot(111, projection='3d')
         if len(point) == 3:
             x.remove(point1[0])
@@ -138,9 +149,12 @@ def main():
         ax.set_xlabel('X Label')
         ax.set_ylabel('Y Label')
         ax.set_zlabel('Z Label')
+    else:
+        print("Cannot be plotted!")
 
     plt.show()
 
 if __name__ == '__main__':
-    count=0
+    count = 0
+    rand = 1000
     main()
