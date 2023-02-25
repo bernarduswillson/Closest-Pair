@@ -29,16 +29,16 @@ def plot(points, point1, point2, rand):
             plt.scatter(x, y, c='black', alpha=1)
             plt.scatter(point1[0], 0, c='blue')
             plt.scatter(point2[0], 0, c='blue')
-            x_line = [point1[0], point2[0]]
-            y_line = [0, 0]
-            plt.plot(x_line, y_line)
+            xLine = [point1[0], point2[0]]
+            yLine = [0, 0]
+            plt.plot(xLine, yLine)
         if len(point) == 2:
             plt.scatter(x, y, c='black', alpha=1)
             plt.scatter(point1[0], point1[1], c='blue')
             plt.scatter(point2[0], point2[1], c='blue')
-            x_line = [point1[0], point2[0]]
-            y_line = [point1[1], point2[1]]
-            plt.plot(x_line, y_line)
+            xLine = [point1[0], point2[0]]
+            yLine = [point1[1], point2[1]]
+            plt.plot(xLine, yLine)
         plt.show()
     elif len(point) <= 6:
         ax = fig.add_subplot(111, projection='3d')
@@ -62,13 +62,13 @@ def plot(points, point1, point2, rand):
             img = ax.scatter(x, y, z, c=c, cmap=plt.hot(), s=s, alpha=o)
             fig.colorbar(img)
 
-        x_line = [point1[0], point2[0]]
-        y_line = [point1[1], point2[1]]
-        z_line = [point1[2], point2[2]]
-        ax.plot(x_line, y_line, z_line, c='blue')
-        ax.set_xlabel('X Label')
-        ax.set_ylabel('Y Label')
-        ax.set_zlabel('Z Label')
+        xLine = [point1[0], point2[0]]
+        yLine = [point1[1], point2[1]]
+        zLine = [point1[2], point2[2]]
+        ax.plot(xLine, yLine, zLine, c='blue')
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
         plt.show()
     else:
         print("\nTidak dapat divisualisasikan!")
