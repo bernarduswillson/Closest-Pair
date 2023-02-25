@@ -45,7 +45,7 @@ def shortest_distance(points):
     
     #odd number of points base
     elif len(points) == 3:
-        minDistance = rand
+        minDistance = rand*rand
         point1 = points[0]
         point2 = points[1]
         #brute force comparison
