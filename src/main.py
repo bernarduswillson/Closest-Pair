@@ -1,11 +1,10 @@
 import math
 import time
 import random
-import matplotlib.pyplot as plt
 import others.plot as plot
 
 
-#calculate the distance between two points and count the number of distance calculation
+# calculate the distance between two points and count the number of distance calculation
 def distance(p1, p2):
     global count
     count += 1
@@ -14,10 +13,21 @@ def distance(p1, p2):
         dis += (p1[i] - p2[i]) ** 2
     return math.sqrt(dis)
 
+
+# sort the points based on x coordinate
+def sort(points):
+    n = len(points)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if points[j][0] > points[j+1][0]:
+                points[j], points[j+1] = points[j+1], points[j]
+    return points
+
+
 #find the shortest distance between two points
 def shortest_distance(points):
     #sort the points based on x coordinate
-    points = sorted(points, key=lambda point: point[0])
+    points = sort(points)
 
     #even number of points base
     if len(points) == 2:
@@ -59,6 +69,7 @@ def shortest_distance(points):
             if abs(point[0] - mid_x) < min_distance:
                 mid_points.append(point)
 
+
         #brute force comparison
         for i in range(len(mid_points)):
             for j in range(i+1, len(mid_points)):
@@ -70,6 +81,7 @@ def shortest_distance(points):
         
         return min_distance, point1, point2
 
+
 def main():
     global count
     global rand
@@ -78,15 +90,28 @@ def main():
         contents = file.read()
         print(contents)
 
-    n = int(input('Masukkan jumlah titik: '))
-    d = int(input('Masukkan jumlah dimensi: '))
+    #input validation
+    flag = False
+    while not flag:
+        n = int(input('Masukkan jumlah titik: '))
+        if n < 2:
+            print('Jumlah titik minimal 2! Silahkan masukkan kembali.\n')
+        else:
+            flag = True
+    flag = False
+    while not flag:
+        d = int(input('Masukkan jumlah dimensi: '))
+        if d < 1:
+            print('Jumlah dimensi minimal 1! Silahkan masukkan kembali.\n')
+        else:
+            flag = True
 
     #generate random points
     points = []
     for i in range(n):
         point = []
         for j in range(d):
-            point.append(random.randint(0, rand))
+            point.append(random.uniform(0, rand))
         points.append(point)
     start = time.time()
 
@@ -94,16 +119,19 @@ def main():
     min_distance, point1, point2 = shortest_distance(points)
     end = time.time()
     print('--------------------------------------------------------------------------------------------')
-    print('Dua titik yang paling berdekatan:\n', point1, "dan", point2)
-    print('Jaraknya adalah: ', min_distance)
+    print('Dua titik yang paling berdekatan:')
+    print('Titik 1:',', '.join("{:.2f}".format(p) for p in point1))
+    print('Titik 2:',', '.join("{:.2f}".format(p) for p in point2))
+    print('\nJaraknya adalah: {:.2f}'.format(min_distance))
     print('Banyaknya operasi perhitungan rumus Euclidian: ', count)
     print('--------------------------------------------------------------------------------------------')
-    print('Execution Time: ', end - start)
+    print('Execution Time: {:.2f}'.format(end - start))
 
+    #plot the points
     plot.plot(points, point1, point2, rand)
    
 
 if __name__ == '__main__':
     count = 0
-    rand = 1000
+    rand = 1000.0
     main()

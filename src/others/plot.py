@@ -1,7 +1,4 @@
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import random
-import math
  
 #plot the points
 def plot(points, point1, point2, rand):
