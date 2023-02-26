@@ -38,7 +38,7 @@ def sort(points):
 
 
 #find the shortest distance between two points
-def shortest_distance(points):
+def shortestDistance(points):
     #even number of points base
     if len(points) == 2:
         return distance(points[0], points[1]), points[0], points[1]
@@ -61,8 +61,8 @@ def shortest_distance(points):
     #recursive
     else:
         mid = len(points) // 2
-        leftMinDistance, leftPoint1, leftPoint2 = shortest_distance(points[:mid])
-        rightMinDistance, rightPoint1, rightPoint2 = shortest_distance(points[mid:])
+        leftMinDistance, leftPoint1, leftPoint2 = shortestDistance(points[:mid])
+        rightMinDistance, rightPoint1, rightPoint2 = shortestDistance(points[mid:])
         if leftMinDistance < rightMinDistance:
             minDistance = leftMinDistance
             point1 = leftPoint1
@@ -130,7 +130,7 @@ def main():
     points = sort(points)
 
     #calculate the shortest distance
-    minDistance, point1, point2 = shortest_distance(points)
+    minDistance, point1, point2 = shortestDistance(points)
     end = time.time()
     print('--------------------------------------------------------------------------------------------')
     print('Dua titik yang paling berdekatan:')
