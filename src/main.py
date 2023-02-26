@@ -15,40 +15,33 @@ def distance(p1, p2):
     return math.sqrt(dis)
 
 
-# quick sort the points based on x coordinate
-def sort(points):
-    def quickSort(points, start, end):
-        if start < end:
-            pivot = partition(points, start, end)
-            quickSort(points, start, pivot - 1)
-            quickSort(points, pivot + 1, end)
-
-    def partition(points, start, end):
-        pivot = points[end][0]
-        i = start - 1
-        for j in range(start, end):
-            if points[j][0] <= pivot:
-                i += 1
-                points[i], points[j] = points[j], points[i]
-        points[i + 1], points[end] = points[end], points[i + 1]
-        return i + 1
-
-    quickSort(points, 0, len(points) - 1)
-    return points
+# DnC quick sort the points
+def quickSort(points):
+    if len(points) <= 1:
+        return points
+    else:
+        pivot = points[0]
+        left = []
+        right = []
+        for i in range(1, len(points)):
+            if points[i] < pivot:
+                left.append(points[i])
+            else:
+                right.append(points[i])
+        return quickSort(left) + [pivot] + quickSort(right)
 
 
-#find the shortest distance between two points
-def shortestDistance(points):
-    #even number of points base
+# find the shortest distance between two points
+def DnCShortestDistance(points):
+    # even number of points base
     if len(points) == 2:
         return distance(points[0], points[1]), points[0], points[1]
     
-    #odd number of points base
+    # odd number of points base, brute force
     elif len(points) == 3:
         minDistance = rand*rand
         point1 = points[0]
         point2 = points[1]
-        #brute force comparison
         for i in range(len(points)):
             for j in range(i+1, len(points)):
                 dis = distance(points[i], points[j])
@@ -58,11 +51,11 @@ def shortestDistance(points):
                     point2 = points[j]
         return minDistance, point1, point2
     
-    #recursive
+    # recursive finding the shortest distance
     else:
         mid = len(points) // 2
-        leftMinDistance, leftPoint1, leftPoint2 = shortestDistance(points[:mid])
-        rightMinDistance, rightPoint1, rightPoint2 = shortestDistance(points[mid:])
+        leftMinDistance, leftPoint1, leftPoint2 = DnCShortestDistance(points[:mid])
+        rightMinDistance, rightPoint1, rightPoint2 = DnCShortestDistance(points[mid:])
         if leftMinDistance < rightMinDistance:
             minDistance = leftMinDistance
             point1 = leftPoint1
@@ -72,35 +65,55 @@ def shortestDistance(points):
             point1 = rightPoint1
             point2 = rightPoint2
 
-        #find the points that are close to the mid point
-        midX = points[mid][0]
-        minPoints = []
-        for point in points:
-            if abs(point[0] - midX) < minDistance:
-                minPoints.append(point)
+        # find the points that are close to mid point (strip)
+        midPoint = points[mid][0]
+        midPoints = []
+        for i in range(len(points)):
+            if midPoint - minDistance < points[i][0] < midPoint + minDistance:
+                midPoints.append(points[i])
 
-
-        #brute force comparison
-        for i in range(len(minPoints)):
-            for j in range(i+1, len(minPoints)):
-                dis = distance(minPoints[i], minPoints[j])
-                if dis < minDistance:
-                    minDistance = dis
-                    point1 = minPoints[i]
-                    point2 = minPoints[j]
+        # find the shortest distance between the points in mid points
+        for i in range(len(midPoints)):
+            for j in range(i+1, len(midPoints)):
+                flag = True
+                for k in range(len(midPoints[i])):
+                    if abs(midPoints[i][k] - midPoints[j][k]) > minDistance:
+                        flag = False
+                if flag:
+                    dis = distance(midPoints[i], midPoints[j])
+                    if dis < minDistance:
+                        minDistance = dis
+                        point1 = midPoints[i]
+                        point2 = midPoints[j]
         
         return minDistance, point1, point2
+
+
+#brute force comparison
+def BFShortestDistance(points):
+    minDistance = rand * rand
+    point1 = points[0]
+    point2 = points[1]
+    for i in range(len(points)):
+        for j in range(i+1, len(points)):
+            dis = distance(points[i], points[j])
+            if dis < minDistance:
+                minDistance = dis
+                point1 = points[i]
+                point2 = points[j]
+    return minDistance, point1, point2
 
 
 def main():
     global count
     global rand
-    # Open the text file in read mode
+
+    # splash screen from txt file
     with open('src/others/splashScreen.txt', 'r') as file:
         contents = file.read()
         print(contents)
 
-    #input validations
+    # input validations
     flag = False
     while not flag:
         n = int(input('Masukkan jumlah titik: '))
@@ -116,7 +129,7 @@ def main():
         else:
             flag = True
 
-    #generate random points
+    # generate random points
     points = []
     for i in range(n):
         point = []
@@ -124,15 +137,18 @@ def main():
             point.append(random.uniform(0, rand))
         points.append(point)
 
+
+    # ~DIVIDE AND CONQUER~
     start = time.time()
 
-    #sort the points based on x coordinate
-    points = sort(points)
+    # sort the points based on x coordinate
+    points = quickSort(points)
 
-    #calculate the shortest distance
-    minDistance, point1, point2 = shortestDistance(points)
+    # calculate the shortest distance
+    minDistance, point1, point2 = DnCShortestDistance(points)
     end = time.time()
     print('--------------------------------------------------------------------------------------------')
+    print('~DIVIDE AND CONQUER~')
     print('Dua titik yang paling berdekatan:')
     print('Titik 1:',', '.join("{:.2f}".format(p) for p in point1))
     print('Titik 2:',', '.join("{:.2f}".format(p) for p in point2))
@@ -140,13 +156,36 @@ def main():
     print('Banyaknya operasi perhitungan rumus Euclidian: ', count)
     print('--------------------------------------------------------------------------------------------')
     print('Waktu eksekusi: {:.2f} ms'.format((end - start) * 1000))
-    print(platform.processor())
-
+    
     #plot the points
     plot.plot(points, point1, point2, rand)
-   
+
+    print('--------------------------------------------------------------------------------------------')
+    print('--------------------------------------------------------------------------------------------')
+
+
+    # ~BRUTE FORCE~
+    count = 0
+    start = time.time()
+
+    # calculate the shortest distance
+    minDistance, point1, point2 = BFShortestDistance(points)
+    end = time.time()
+    print('~BRUTE FORCE~')
+    print('Dua titik yang paling berdekatan:')
+    print('Titik 1:',', '.join("{:.2f}".format(p) for p in point1))
+    print('Titik 2:',', '.join("{:.2f}".format(p) for p in point2))
+    print('\nJaraknya adalah: {:.2f}'.format(minDistance))
+    print('Banyaknya operasi perhitungan rumus Euclidian: ', count)
+    print('--------------------------------------------------------------------------------------------')
+    print('Waktu eksekusi: {:.2f} ms'.format((end - start) * 1000))
+    print('--------------------------------------------------------------------------------------------')
+    print(platform.processor())
+
 
 if __name__ == '__main__':
+    # euclidian distance counter
     count = 0
+    # random number range
     rand = 1000.0
     main()
