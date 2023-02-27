@@ -17,24 +17,29 @@ Pada projek ini, digunakan suatu algoritma menggunakan Bahasa *Python* dan denga
 ## Struktur Program
 
 ```
-├─── doc
-        │ Tucil2_K3_13521021_Bernardus Willson.pdf
-        | Tucil2-Stima-2023.pdf
-
-├─── src
-        │ others
-                | plot.py
-                | splashScreen.txt
-        │ main.py
-├─── README.md
+.
+├── bin
+├── doc/
+│   ├── Tucil2_K3_13521021_Bernardus Willson.pdf
+│   └── Tucil2-Stima-2023.pdf
+├── src/
+│   ├── algorithm/
+│   │   ├── bruteForce.py
+│   │   └── divideAndConquer.py
+│   ├── others/
+│   │   ├── plot.py
+│   │   └── splashScreen.txt
+│   └── main.py
+├── README.md
+└── run.bat
 ```
 
 
 ## Menjalankan Program
 
-Untuk menjalankan program, pada *root directory*, jalankan command pada terminal:
+Untuk menjalankan program, pada *root directory* terminal, jalankan command run.bat (pada windows):
 ```
-python "src\main.py"
+./run.bat
 ```
 
 

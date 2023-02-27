@@ -1,0 +1,1 @@
+python -X pycache_prefix=bin src/main.py  
